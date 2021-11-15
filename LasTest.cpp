@@ -2,17 +2,30 @@
 //
 #define _CRT_SECURE_NO_WARNINGS
 #include <iostream>
+
+#include "PointReader.h"
+#include <pcl/visualization/cloud_viewer.h>
 #include <opencv2/opencv.hpp>
-#include "lasreader.hpp"
+
 using namespace std;
 using namespace cv;
+
 int main()
 {
-	LASreadOpener lasreadopener;
-	lasreadopener.set_file_name("E:/vs-projects/LasTest/points.laz");
-	LASreader* lasreader = lasreadopener.open();
-	while (lasreader->read_point())
-		cout << lasreader->point.get_x() << "  " << lasreader->point.get_y() << "  " << lasreader->point.get_z()<<"\n";
+	string filename = "points.laz";
+	SIT::PointReader* pointCloud = new SIT::PointReader;
+	pointCloud->readPoints(filename);
 
+	pcl::visualization::PCLVisualizer viewer1("Cloud Viewer1");
+	viewer1.addPointCloud(pointCloud->cloud);
+	viewer1.setBackgroundColor(0, 0, 0);
+
+	pcl::visualization::PCLVisualizer viewer2("Cloud Viewer2");
+	pointCloud->downSamplingPointCloud(pointCloud->cloud, 1, 1, 1);
+	viewer2.addPointCloud(pointCloud->cloud);
+	viewer2.setBackgroundColor(0, 0, 0);
+
+	system("pause");
+	return 0;
 }
 
