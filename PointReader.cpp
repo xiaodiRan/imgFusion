@@ -5,7 +5,7 @@ namespace SIT {
 	{
 		string filenameSubfix = filename.substr(filename.size() - 3, 3);
 		if (filename.empty() || (filenameSubfix != "las" && filenameSubfix != "laz" \
-			&& filenameSubfix != "pcd")) {
+			&& filenameSubfix != "pcd" && filenameSubfix != "ply")) {
 			PCL_ERROR("This file CANNOT BE READ, please check the type!");
 			return;
 		}
@@ -33,7 +33,13 @@ namespace SIT {
 		}
 		else if (filenameSubfix == "pcd") {
 			if (pcl::io::loadPCDFile<pcl::PointXYZRGB>(filename, *(this->cloud)) == -1) {
-				PCL_ERROR("read pcd failed!");
+				PCL_ERROR("read pcd file failed!");
+				return;
+			}
+		}
+		else if (filenameSubfix == "ply") {
+			if (pcl::io::loadPLYFile<pcl::PointXYZRGB>(filename, *(this->cloud)) == -1) {
+				PCL_ERROR("read ply file failed!");
 				return;
 			}
 		}
